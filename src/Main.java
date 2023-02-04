@@ -26,7 +26,7 @@ public class Main {
         System.out.println("X1 = " + res[0]);
         System.out.println("X2 = " + res[1]);
 
-        System.out.println("Значение функции:");
+        System.out.println("\nЗначение функции:");
         System.out.println("F = " + (res[0] * funcArr[0] + res[1] * funcArr[1]));
     }
 }

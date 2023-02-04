@@ -54,7 +54,7 @@ public class Gomory {
                 //простой симплекс
                 Simplex.simplex();
                 //получение промежуточного результата
-                getResult(result);
+                //getResult(result);
             }
             //итоговый результат
             getResult(result);
@@ -72,6 +72,9 @@ public class Gomory {
             else
                 result[i] = 0;
         }
+        System.out.println("Промежуточное решение:");
+        System.out.println("X1 = " + result[0]);
+        System.out.println("X2 = " + result[1]+"\n");
     }
 
     //симплекс-метод для Гомори (по-другому ищем строку и столбец)
