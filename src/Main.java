@@ -1,14 +1,21 @@
 public class Main {
     public static void main(String[] args) {
         double[][] coeffMatrix = {{3, -3, 2},
-                {5, 3, 1},
-                {1, 1, 1},
-                {0, 3, -3}};
+                                  {5, 3, 1},
+                                  {1, 1, 1},
+                                  {0, 3, -3}};
         double[] funcArr = {3, -3};
         String[] signArr = {"<=", "<=", ">=", "min"};
 
+//        double[][] coeffMatrix = {{0, 3, 2},
+//                                  {4, 0, 4},
+//                                  {8, 3, 4},
+//                                  {0, 3, 0}};
+//        double[] funcArr = {3, 0};
+//        String[] signArr = {">=", "<=", "<=", "max"};
+
         Gomory myGomory = new Gomory(coeffMatrix, signArr);
-        double[] res = new double[2];
+        double[] res = new double[funcArr.length];
         double[][] resTable;
 
         resTable = myGomory.getAnswer(res);
