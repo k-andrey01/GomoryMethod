@@ -109,34 +109,15 @@ public class Gomory {
                 result[i] = 0;
         }
 
-        while (!isInt(result)){
+        while (!isInt(result)) {
             methodGomory(result);
             //TODO изменение строк по Гомори
-            mainRow = basis.size()-1;
-            mainCol = findMainColGomory(mainRow);
-            System.out.println(mainCol+" "+mainRow);
-            basis.set(mainRow, mainCol);
-            double[][] newTable = new double[m][n];
-
-            for (int i = 0; i < n; i++)
-                newTable[mainRow][i] = table[mainRow][i] / table[mainRow][mainCol];
-
-            for (int i = 0; i < m; i++) {
-                if (i == mainRow)
-                    continue;
-                for (int j = 0; j < n; j++)
-                    newTable[i][j] = table[i][j] - table[i][mainCol] * newTable[mainRow][j];
-            }
-            table = cloneMatrix(newTable);
-            printMatrix(table);
-
-            while (!isEnd()) {
-                System.out.println("HERE");
-                mainCol = findMainCol();
-                mainRow = findMainRow(mainCol);
-                System.out.println(mainCol+" "+mainRow);
+            if (!isEnd()) {
+                mainRow = basis.size() - 1;
+                mainCol = findMainColGomory(mainRow);
+                System.out.println(mainCol + " " + mainRow);
                 basis.set(mainRow, mainCol);
-                newTable = new double[m][n];
+                double[][] newTable = new double[m][n];
 
                 for (int i = 0; i < n; i++)
                     newTable[mainRow][i] = table[mainRow][i] / table[mainRow][mainCol];
@@ -149,8 +130,38 @@ public class Gomory {
                 }
                 table = cloneMatrix(newTable);
                 printMatrix(table);
-            }
 
+                while (!isEnd()) {
+                    System.out.println("HERE");
+                    mainCol = findMainCol();
+                    mainRow = findMainRow(mainCol);
+                    System.out.println(mainCol + " " + mainRow);
+                    basis.set(mainRow, mainCol);
+                    newTable = new double[m][n];
+
+                    for (int i = 0; i < n; i++)
+                        newTable[mainRow][i] = table[mainRow][i] / table[mainRow][mainCol];
+
+                    for (int i = 0; i < m; i++) {
+                        if (i == mainRow)
+                            continue;
+                        for (int j = 0; j < n; j++) {
+                            newTable[i][j] = table[i][j] - table[i][mainCol] * newTable[mainRow][j];
+                            reformateMatrix(newTable, i, j);
+                        }
+                    }
+                    table = cloneMatrix(newTable);
+                    printMatrix(table);
+                }
+
+                for (int i = 0; i < result.length; i++) {
+                    int k = basis.indexOf(i + 1);
+                    if (k != -1)
+                        result[i] = table[k][0];
+                    else
+                        result[i] = 0;
+                }
+            }
             for (int i = 0; i < result.length; i++) {
                 int k = basis.indexOf(i + 1);
                 if (k != -1)
@@ -227,8 +238,51 @@ public class Gomory {
         table = cloneMatrix(newMatrix);
         basis.add(newMatrix[0].length-1);
 
-        System.out.println("fromG");
+        System.out.println("fromG 1");
         printMatrix(table);
+
+        boolean fl = false;
+        for (int i = 0; i<m; i++){
+            if (table[i][0] < 0){
+                fl = true;
+            }
+        }
+        if (fl == true){
+            int myRow = 0;
+            double min = Double.MAX_VALUE;
+            for (int i = 0; i<m; i++){
+                if (table[i][0] < min && table[i][0] < 0){
+                    min = table[i][0];
+                    myRow = i;
+                }
+            }
+
+            int myCol = 1;
+            min = Double.MAX_VALUE;
+            for (int i = 1; i<n; i++){
+                if (table[myRow][i] < min && table[myRow][i] < 0){
+                    min = table[myRow][i];
+                    myCol = i;
+                }
+            }
+            System.out.println(myCol+" "+myRow);
+            basis.set(myRow, myCol);
+            double[][] newTable = new double[m][n];
+
+            for (int i = 0; i < n; i++)
+                newTable[myRow][i] = table[myRow][i] / table[myRow][myCol];
+
+            for (int i = 0; i < m; i++) {
+                if (i == myRow)
+                    continue;
+                for (int j = 0; j < n; j++)
+                    newTable[i][j] = table[i][j] - table[i][myCol] * newTable[myRow][j];
+            }
+            table = cloneMatrix(newTable);
+            System.out.println("fromG");
+            printMatrix(table);
+
+        }
     }
 
     private int findMainColGomory(int mainRow){
@@ -304,6 +358,12 @@ public class Gomory {
             System.out.println();
         }
         System.out.println();
+    }
+
+    private void reformateMatrix(double[][] newTable, int i, int j){
+        if (1-(Math.abs(newTable[i][j])*10)%1 < 0.0001) {
+            newTable[i][j] = (double) (Math.round(newTable[i][j] * 10))/10;
+        }
     }
 
 }
